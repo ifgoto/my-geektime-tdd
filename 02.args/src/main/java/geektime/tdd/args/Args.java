@@ -22,22 +22,20 @@ public class Args {
     }
 
     private static Object parseOption(List<String> arguments, Parameter parameter) {
-        Object value = null;
         Option option = parameter.getAnnotation(Option.class);
 
+        OptionParser parser = null;
+
         if (parameter.getType() == boolean.class) {
-            OptionParser parser = new BooleanParser();
-            value = parser.parse(arguments, option);
+            parser = new BooleanParser();
         }
         if (parameter.getType() == int.class) {
-            OptionParser parser = new IntOptionParser();
-            value = parser.parse(arguments, option);
+            parser = new IntOptionParser();
         }
         if (parameter.getType() == String.class) {
-            OptionParser parser = new StringOptionParser();
-            value = parser.parse(arguments, option);
+            parser = new StringOptionParser();
         }
-        return value;
+        return parser.parse(arguments, option);
     }
 
     interface OptionParser {

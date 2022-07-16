@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ArgsTest {
-    // 策略一：正则切割，比较复杂
+    // 策略一：用下标去直接定位
     // -l -p 8080 -d /usr/logs
 
     // 策略二：拆分成数组

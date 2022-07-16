@@ -29,6 +29,6 @@ public class Args {
     private static Map<Class<?>, OptionParser> PARSERS = Map.of(
             boolean.class, new BooleanParser(),
             int.class, new IntOptionParser(),
-            String.class, new StringOptionParser());
+            String.class, StringOptionParser.createStringOptionParser());
 
 }

@@ -31,30 +31,4 @@ public class Args {
             int.class, new IntOptionParser(),
             String.class, new StringOptionParser());
 
-    interface OptionParser {
-        Object parse(List<String> arguments, Option option);
-    }
-
-    static class StringOptionParser implements OptionParser {
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return arguments.get(index + 1);
-        }
-    }
-
-    static class IntOptionParser implements OptionParser {
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return Integer.valueOf(arguments.get(index + 1));
-        }
-    }
-
-    static class BooleanParser implements OptionParser {
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            return arguments.contains("-" + option.value());
-        }
-    }
 }

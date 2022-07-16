@@ -55,4 +55,11 @@ public class Args {
     private static Object parseBoolean(List<String> arguments, Option option) {
         return arguments.contains("-" + option.value());
     }
+
+    static class BooleanParser implements OptionParser {
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            return parseBoolean(arguments, option);
+        }
+    }
 }

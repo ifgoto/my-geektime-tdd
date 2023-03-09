@@ -54,7 +54,7 @@ public class ArgsTest {
 
     static record IntOption(@Option("p")int port) {}
 
-    // TODO: String -d /usr/logs
+    //  String -d /usr/logs
     @Test
     public void should_parse_stringF_as_option_value() {
         StringOption option = Args.parse(StringOption.class,  "-d", "/usr/logs");

@@ -9,25 +9,16 @@ import java.util.Map;
 
 public class Args {
 
-//    private static IntOptionParser parser;
-//    private static StringOptionParse parser;
-//    private static BooleanParser parse;
-
     public static <T> T parse(Class<T> optionsClass, String... args) {
         try {
             List<String> argument = Arrays.asList(args);
             Constructor<?> constructor = optionsClass.getDeclaredConstructors()[0];
-
-            Object[] values =
-                    Arrays.stream(constructor.getParameters()).map(it -> parseOption(argument, it)).toArray();
-
+            Object[] values = Arrays.stream(constructor.getParameters()).map(it -> parseOption(argument, it)).toArray();
             return (T) constructor.newInstance(values);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
 
     private static Object parseOption(List<String> arguments, Parameter parameter) {
         return getOptionParser(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
@@ -40,36 +31,5 @@ public class Args {
 
     private static OptionParser getOptionParser(Class<?> type) {
         return  PARSER.get(type);
-    }
-
-
-    interface OptionParser {
-        Object parse(List<String> arguments, Option option);
-    }
-
-    static class StringOptionParse implements OptionParser{
-
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return arguments.get(index+1);
-        }
-    }
-
-    static class IntOptionParser implements OptionParser {
-
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            int index = arguments.indexOf("-" + option.value());
-            return Integer.parseInt(arguments.get(index + 1));
-        }
-    }
-
-    static class BooleanParser implements OptionParser {
-
-        @Override
-        public Object parse(List<String> arguments, Option option) {
-            return arguments.contains("-" + option.value());
-        }
     }
 }

@@ -6,6 +6,7 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Args {
 
@@ -26,8 +27,9 @@ public class Args {
 
     private static Map<Class<?>, OptionParser> PARSER = Map.of(
             boolean.class, new BooleanParser(),
-            int.class, new IntOptionParser(),
-            String.class, new StringOptionParse());
+            int.class, new SingleValueOptionParser<>(Integer::parseInt),
+            String.class, new SingleValueOptionParser<>(Function.identity()));
+//            String.class, new SingleValueOptionParser<>(String::valueOf));
 
     private static OptionParser getOptionParser(Class<?> type) {
         return  PARSER.get(type);

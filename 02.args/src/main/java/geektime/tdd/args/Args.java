@@ -1,14 +1,18 @@
 package geektime.tdd.args;
 
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Args {
+
+//    private static IntOptionParser parser;
+//    private static StringOptionParse parser;
+//    private static BooleanParser parse;
+
     public static <T> T parse(Class<T> optionsClass, String... args) {
         try {
             List<String> argument = Arrays.asList(args);
@@ -24,24 +28,48 @@ public class Args {
         }
     }
 
-    private static Object parseOption(List<String> argument, Parameter parameter) {
-        Object value = null;
-        Option option = parameter.getAnnotation(Option.class);
 
-        if (parameter.getType() == boolean.class){
+    private static Object parseOption(List<String> arguments, Parameter parameter) {
+        return getOptionParser(parameter.getType()).parse(arguments, parameter.getAnnotation(Option.class));
+    }
 
-            value = argument.contains("-" + option.value());
+    private static Map<Class<?>, OptionParser> PARSER = Map.of(
+            boolean.class, new BooleanParser(),
+            int.class, new IntOptionParser(),
+            String.class, new StringOptionParse());
+
+    private static OptionParser getOptionParser(Class<?> type) {
+        return  PARSER.get(type);
+    }
+
+
+    interface OptionParser {
+        Object parse(List<String> arguments, Option option);
+    }
+
+    static class StringOptionParse implements OptionParser{
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return arguments.get(index+1);
         }
+    }
 
-        if (parameter.getType() == int.class) {
-            int index = argument.indexOf("-" + option.value());
-            value = Integer.parseInt(argument.get(index + 1));
-        }
+    static class IntOptionParser implements OptionParser {
 
-        if (parameter.getType() == String.class) {
-            int index = argument.indexOf("-" + option.value());
-            value = argument.get(index+1);
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            int index = arguments.indexOf("-" + option.value());
+            return Integer.parseInt(arguments.get(index + 1));
         }
-        return value;
+    }
+
+    static class BooleanParser implements OptionParser {
+
+        @Override
+        public Object parse(List<String> arguments, Option option) {
+            return arguments.contains("-" + option.value());
+        }
     }
 }
